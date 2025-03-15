@@ -1,4 +1,3 @@
-import pygame.image
 from config import *
 
 class Food:
@@ -8,16 +7,27 @@ class Food:
         self.grid_pos = [pos[0], pos[1]]
         self.pixel_pos = self.get_current_pixel_pos()
         self.food_type = food_type
+        self.eaten = False
         
         food_images = {
             "normal": FOOD_IMAGE,
             "power_pellet": POWER_PELLET_IMAGE,
             "special": SPECIAL_FOOD_IMAGE
         }
-        if food_type == "power_pellet" or food_type == "special":
-            self.image = pygame.transform.scale(pygame.image.load(food_images[food_type]), (self.width * 2, self.width * 2))
-        else:
-            self.image = pygame.transform.scale(pygame.image.load(food_images[food_type]), (self.width, self.width))
+        # if food_type == "power_pellet" or food_type == "special":
+        #     self.image = pygame.transform.scale(pygame.image.load(food_images[food_type]), (self.width * 2, self.width * 2))
+        # else:
+        #     self.image = pygame.transform.scale(pygame.image.load(food_images[food_type]), (self.width, self.width))
+        
+        if self.food_type not in food_images:
+            self.food_type = "normal"
+            
+        size_food = 2 if self.food_type in ["power_pellet", "special"] else 1
+        self.image = pygame.transform.scale(
+            pygame.image.load(food_images[self.food_type]),
+            (self.width * size_food, self.width * size_food)
+        )
+        
         self.cell = cell
         
     def appear(self):
@@ -32,20 +42,28 @@ class Food:
         return [self.grid_pos[0] * CELL_SIZE + CELL_SIZE // 2 - self.width // 2 + MAP_POS_X,
                 self.grid_pos[1] * CELL_SIZE + CELL_SIZE // 2 - self.width // 2 + MAP_POS_Y]
         
+    def eat(self):
+        self.eaten = True
+        
     def draw(self):
         """Ve thuc an len man hinh"""
-        food_rect = self.app.screen.blit(self.image, (self.pixel_pos[0], self.pixel_pos[1]))
-        pygame.display.update(food_rect)
+        # food_rect = self.app.screen.blit(self.image, (self.pixel_pos[0], self.pixel_pos[1]))
+        # pygame.display.update(food_rect)
+        if not self.eaten:
+            self.app.screen.blit(self.image, (self.pixel_pos[0], self.pixel_pos[1]))
         
     def get_effect(self):
         """Trả về hiệu ứng cho từng loại thức ăn"""
-        if self.food_type == "normal":
-            return SCORE_BONUS # Cộng điểm bình thường
-        elif self.food_type == "power_pellet":
-            return "frightened"
-        elif self.food_type == "special":
-            return SPECIAL_SCORE
-        return None
+        effects = {
+            "normal": SCORE_BONUS,
+            "power_pellet": "frightened",
+            "special": SPECIAL_SCORE
+        }
+        return effects.get(self.food_type, None)
+    
+class FakeApp:
+    def __init__(self, screen):
+        self.screen = screen
     
 if __name__ == "__main__":
     pygame.init()
@@ -56,9 +74,7 @@ if __name__ == "__main__":
     screen.fill((0, 0, 0))  # Màu nền đen
 
     # Fake app có màn hình
-    class FakeApp:
-        def __init__(self, screen):
-            self.screen = screen
+    
 
     app = FakeApp(screen)
 

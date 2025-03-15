@@ -1,7 +1,7 @@
 import pygame
 
 # Window App
-APP_WIDTH, APP_HEIGHT = 610, 680
+APP_WIDTH, APP_HEIGHT = 880, 680
 APP_CAPTION = r"Pacman Game"
 FPS = 120
 
@@ -20,8 +20,9 @@ MAP_INPUT_TXT = [[r"../Assets/levels/level_1/map_1.txt", r"../Assets/levels/leve
 MAP_NUM = len(MAP_IMG)
 
 # Background
-HOME_BACKGROUND = r"../Assets/bg/home_bg.png"
-ABOUT_BACKGROUND = r"../Assets/bg/about_bg.png"
+HOME_BACKGROUND = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Background\\background.jpg"
+LEADERBOARD = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Background\\about.jpg"
+ABOUT_BACKGROUND = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Background\\about.jpg"
 GAMEOVER_BACKGROUND = r"../Assets/bg/gameover_bg.png"
 VICTORY_BACKGROUND = r"../Assets/bg/victory_bg.jpg"
 
