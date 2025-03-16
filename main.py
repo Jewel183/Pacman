@@ -1,56 +1,65 @@
 import pygame
 from config import *
 from MainMenu import MainMenu
-from Leaderboard import Leaderboard
+from Level import Level
 from About import About
 
 def main():
     pygame.init()
+
+    # Tạo cửa sổ game
     screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
-    pygame.display.set_caption("Pac-Man Game")
+    pygame.display.set_caption("Pac-Man AI Project")
 
-    # Khởi tạo màn hình chính và leaderboard
+    # Khởi tạo các màn hình
     main_menu = MainMenu(screen)
-    leaderboard = Leaderboard(screen)
-    about = About(screen)
+    level_screen = Level(screen)
+    about_screen = About(screen)
 
-    current_screen = "menu"  # Trạng thái hiện tại của màn hình
+    # Trạng thái game (bắt đầu từ menu chính)
+    game_state = "menu"
+
     running = True
-
     while running:
         screen.fill(BLACK)  # Xóa màn hình
-
-        # Hiển thị màn hình hiện tại
-        if current_screen == "menu":
+        
+        if game_state == "menu":
             main_menu.draw()
-        elif current_screen == "leaderboard":
-            leaderboard.draw()
-        elif current_screen == "about":
-            about.draw()
+        elif game_state == "level":
+            level_screen.draw()
+        elif game_state == "about":
+            about_screen.draw()
 
-        # Lắng nghe sự kiện
+        # Xử lý sự kiện
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-            if current_screen == "menu":
-                action = main_menu.handle_event(event)
-                if action == "Start":
-                    print("Start are clicking")
-                if action == "Leaderboard":
-                    current_screen = "leaderboard"  # Chuyển sang leaderboard
-                elif action == "About":
-                    current_screen = "about"
-                elif action == "Exit":
-                    running = False
-            elif current_screen == "leaderboard":
-                action = leaderboard.handle_event(event)
-                if action == "back":
-                    current_screen = "menu"  # Quay lại menu chính
-            elif current_screen == 'about':
-                action = about.handle_event(event)
-                if action == "back":
-                    current_screen = "menu"
+            
+            if game_state == "menu":
+                result = main_menu.handle_event(event)
+                if result == "Start":
+                    game_state = "level"  # Chuyển đến màn hình chọn level
+                elif result == "About":
+                    game_state = "about"  # Chuyển đến màn hình About
+                elif result == "Exit":
+                    running = False  # Thoát game
+            
+            elif game_state == "level":
+                result = level_screen.handle_event(event)
+                if result:  
+                    print(f"Chọn {result} để bắt đầu game!")  # Sau này sẽ xử lý vào game
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+                    game_state = "menu"  # Trở về menu chính
+                
+            if game_state == "level":
+                result = level_screen.handle_event(event)
+                if result == "back":
+                    game_state = "menu"    
+            
+            elif game_state == "about":
+                result = about_screen.handle_event(event)
+                if result == "back":
+                    game_state = "menu"  # Trở về menu chính
 
         pygame.display.update()
 

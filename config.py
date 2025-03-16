@@ -1,62 +1,19 @@
 import pygame
 
 # Window App
-APP_WIDTH, APP_HEIGHT = 880, 680
+APP_WIDTH, APP_HEIGHT = 610, 680
 APP_CAPTION = r"Pacman Game"
 FPS = 120
 
-MAP_IMG = [r"../Assets/maps/map_1.png",
-           r"../Assets/maps/map_2.png",
-           r"../Assets/maps/map_3/png",
-           r"../Assets/maps/map_4.png",
-           r"../Assets/maps/map_5.png"]
-
-MAP_INPUT_TXT = [[r"../Assets/levels/level_1/map_1.txt", r"../Assets/levels/level_1/map_2.txt", r"../Assets/levels/level_1/map_3.txt", r"../Assets/levels/level_1/map_4.txt", r"../Assets/levels/level_1/map_5.txt"],
-                 [r"../Assets/levels/level_1/map_1.txt", r"../Assets/levels/level_1/map_2.txt", r"../Assets/levels/level_1/map_3.txt", r"../Assets/levels/level_1/map_4.txt", r"../Assets/levels/level_1/map_5.txt"],
-                 [r"../Assets/levels/level_1/map_1.txt", r"../Assets/levels/level_1/map_2.txt", r"../Assets/levels/level_1/map_3.txt", r"../Assets/levels/level_1/map_4.txt", r"../Assets/levels/level_1/map_5.txt"],
-                 [r"../Assets/levels/level_1/map_1.txt", r"../Assets/levels/level_1/map_2.txt", r"../Assets/levels/level_1/map_3.txt", r"../Assets/levels/level_1/map_4.txt", r"../Assets/levels/level_1/map_5.txt"],
-                 [r"../Assets/levels/level_1/map_1.txt", r"../Assets/levels/level_1/map_2.txt", r"../Assets/levels/level_1/map_3.txt", r"../Assets/levels/level_1/map_4.txt", r"../Assets/levels/level_1/map_5.txt"]]
-
+MAP_IMG = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Demo\\map0.jpg"
+MAP_INPUT_TXT = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\map.txt"
 MAP_NUM = len(MAP_IMG)
 
+
 # Background
+LEVEL_BACKGROUND = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Background\\level.jpg"
 HOME_BACKGROUND = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Background\\background.jpg"
-LEADERBOARD = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Background\\about.jpg"
 ABOUT_BACKGROUND = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Background\\about.jpg"
-GAMEOVER_BACKGROUND = r"../Assets/bg/gameover_bg.png"
-VICTORY_BACKGROUND = r"../Assets/bg/victory_bg.jpg"
-
-# Screen state
-STATE_HOME = "home"
-STATE_PLAYING = "playing"
-STATE_ABOUT = "about"
-STATE_LEVEL = "level"
-STATE_SETTING = "setting"
-STATE_GAMEOVER = "gameover"
-STATE_VICTORY = "victory"
-
-# Home screen
-HOME_BG_WIDTH, HOME_BG_HEIGHT = APP_WIDTH, APP_HEIGHT - 410
-START_POS = pygame.Rect(150, 325, 300, 50)
-SETTING_POS = pygame.Rect(150, 405, 300, 50)
-ABOUT_POS = pygame.Rect(150, 485, 300, 50)
-EXIT_POS = pygame.Rect(150, 565, 300, 50)
-
-# Level screen
-LEVEL_1_POS = pygame.Rect(150, 320, 300, 50)
-LEVEL_2_POS = pygame.Rect(150, 390, 300, 50)
-LEVEL_3_POS = pygame.Rect(150, 460, 300, 50)
-LEVEL_4_POS = pygame.Rect(150, 530, 300, 50)
-LEVEL_5_POS = pygame.Rect(150, 600, 300, 50)
-BACK_LEVEL_POS = pygame.Rect(500, 600, 70, 50)
-
-# About screen
-BACK_POS = pygame.Rect(225, 530, 150, 50)
-
-# Setting screen
-OK_POS = pygame.Rect(225, 620, 100, 50)
-TRIANGLE_1_POS = [[360, 620], [360, 670], [403.3, 645]]
-TRIANGLE_2_POS = [[250, 620], [250, 670], [206.7, 645]]
 
 # Play screen
 ROW_PADDING, COL_PADDING = 50, 60
@@ -72,28 +29,7 @@ CELL_SIZE = 20
 ROW, COL = MAP_WIDTH // CELL_SIZE, MAP_HEIGHT // CELL_SIZE
 SPEED = 250
 
-# Gameover screen
-COIN_IMAGE = r"../Assets/effects/coin.jpg"
-COIN_POS = (200, 430)
-COIN_WIDTH, COIN_HEIGHT = (200, 200)
-GAMEOVER_BACKGROUND_WIDTH, GAMEOVER_BACKGROUND_HEIGHT = HOME_BG_WIDTH, HOME_BG_HEIGHT + 300
 
-# Victory screen
-PACMAN1 = r"../Assets/effects/pacman1.png"
-PACMAN2 = r"../Assets/effects/pacman2.png"
-PACMAN3 = r"../Assets/effects/pacman3.png"
-PACMAN4 = r"../Assets/effects.pacman4.png"
-PACMAN5 = r"../Assets/effects.pacman5.png"
-
-VICTORY_WIDTH, VICTORY_HEIGHT = (500, 400)
-PACMAN_WIDTH, PACMAN_HEIGHT = (500, 280)
-
-# Score
-SCORE_BONUS = 10
-SPECIAL_SCORE = 40
-SCORE_PENALTY = -1
-
-#Font
 # FONT 
 
 # Color
@@ -106,12 +42,8 @@ RED = (255, 0, 0)
 TOMATO = (255, 99, 71)
 GREEN = (0, 255, 0)
 YELLOW = (255, 255, 0)
+BLUE = (0, 0, 255)
 
-# Pacman, Food, Monster
-FOOD_IMAGE = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Food\\dot.png"
-POWER_PELLET_IMAGE = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Food\\powerdot.png"
-SPECIAL_FOOD_IMAGE = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Food\\food.png"
-POWER_PELLET_DURATION = 8
 
 PACMAN_IMAGE = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Pacman\\0.png"
 PACMAN_LEFT = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Pacman\\left.png"
@@ -127,6 +59,4 @@ MONSTER_IMAGES = {
     "pink": r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Ghost\\pink.png", 
     "orange": r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Ghost\\orange.png"
 }
-
-FRIGHTENED_IMAGE = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Assets\\Ghost\\powerup.png"
 
