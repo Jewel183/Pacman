@@ -25,7 +25,7 @@ class GridTest:
         self.pacman = Pacman(self, self.pacman_pos)
 
         # Tạo ma xanh (Blue Ghost)
-        self.ghost = Blue(self, (14, 13))
+        self.ghost = Blue(self, (11, 29))
 
         # Thời gian bắt đầu tìm kiếm
         self.start_time = time.time()
@@ -36,7 +36,7 @@ class GridTest:
         max_y = max([y for x, y in self.graph.keys()])
         
         # Điều chỉnh kích thước `maze` theo thực tế bản đồ
-        maze = [['11' for _ in range(max_x + 1)] for _ in range(max_y + 1)]
+        maze = [[1 for _ in range(max_x + 1)] for _ in range(max_y + 1)]
         
         for (x, y) in self.graph.keys():
             if 0 <= y < len(maze) and 0 <= x < len(maze[0]):  # Kiểm tra hợp lệ

@@ -4,25 +4,23 @@ import heapq
 import sys
 import time
 
-# def get_neighbors(pos, maze):
-#     """Trả về danh sách ô có thể đi đến (không phải tường)"""
-#     x, y = pos
-#     neighbors = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
-#     valid_neighbors = []
-
-#     for nx, ny in neighbors:
-#         if 0 <= nx < len(maze) and 0 <= ny < len(maze[0]) and maze[nx][ny] != '1':
-#             valid_neighbors.append((nx, ny))
-
-#     return valid_neighbors
-
 def get_neighbors(pos, maze):
     x, y = pos
     neighbors = [
-        (x, y - 1), (x, y + 1),  # Lên và Xuống
-        (x - 1, y), (x + 1, y)   # Trái và Phải
+        (x, y - 1), (x, y + 1),  # Lên, Xuống
+        (x - 1, y), (x + 1, y)   # Trái, Phải
     ]
-    return [(nx, ny) for nx, ny in neighbors if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze) and maze[ny][nx] != '1']
+    return [(nx, ny) for nx, ny in neighbors if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze) and maze[ny][nx] != 1]
+
+
+
+# def get_neighbors(pos, maze):
+#     x, y = pos
+#     neighbors = [
+#         (x, y - 1), (x, y + 1),  # Lên và Xuống
+#         (x - 1, y), (x + 1, y)   # Trái và Phải
+#     ]
+#     return [(nx, ny) for nx, ny in neighbors if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze) and maze[ny][nx] != '1']
 
 
 def bfs(start, goal, maze, track_stats=False):
@@ -47,8 +45,9 @@ def bfs(start, goal, maze, track_stats=False):
                 visited.add(neighbor)
                 queue.append((neighbor, path + [neighbor]))
 
-    search_time = time.time() - search_start_time 
-    return ([], expanded_nodes, sys.getsizeof(queue) + sys.getsizeof(visited), search_time) if track_stats else [] 
+    # search_time = time.time() - search_start_time 
+    # return ([], expanded_nodes, sys.getsizeof(queue) + sys.getsizeof(visited), search_time) if track_stats else []
+    return [] 
     
 
 def dfs(start, goal, maze, track_stats=False):
@@ -244,12 +243,19 @@ class Ghost:
         
         next_x, next_y = path[1]
         print(f"Ghost moving to: {next_x}, {next_y}")  # Debug
+        
+        if maze[next_y][next_x] == 1:
+            print(f"Ghost blocked by wall at {next_x}, {next_y}")
+            return  
 
-        if 0 <= next_x < len(maze[0]) and 0 <= next_y < len(maze) and maze[next_y][next_x] != "1":
-            self.update_direction((next_x, next_y))
-            self.move([next_x, next_y], maze)
-            # self.grid_pos = [next_x, next_y]
-            pygame.display.update()
+        self.update_direction((next_x, next_y))
+        self.move([next_x, next_y], maze)
+
+        # if 0 <= next_x < len(maze[0]) and 0 <= next_y < len(maze) and maze[next_y][next_x] != "1":
+        #     self.update_direction((next_x, next_y))
+        #     self.move([next_x, next_y], maze)
+        #     # self.grid_pos = [next_x, next_y]
+        pygame.display.update()
 
     
     # def move_toward(self, path, maze):
