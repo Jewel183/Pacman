@@ -5,11 +5,11 @@ from Pacman import *  # Import Pac-Man
 from Ghost import *  # Import thuật toán BFS
 from Map import *  # Import hàm đọc bản đồ
 
-class Level1:
+class Level2:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
-        pygame.display.set_caption("Level 1: Blue Ghost tìm Pac-Man (BFS)")
+        pygame.display.set_caption("Level 2: Pink Ghost tìm Pac-Man (DDFS)")
         self.font = pygame.font.SysFont("arial", 20)
         self.running = True
         self.map_img = pygame.image.load(MAP_IMG)
@@ -17,9 +17,9 @@ class Level1:
         self.graph, self.pacman_pos, _ = read_map(MAP_INPUT_TXT)
         self.maze = self.create_maze() 
         self.pacman = Pacman(self, self.pacman_pos)
-        self.ghost = Blue(self, (21, 14))
+        self.ghost = Pink(self, (21, 14))
         self.start_time = time.time()
-        self.back_button = pygame.Rect(0, 0, 80, 40)
+        self.back_button = pygame.Rect(50, 600, 100, 50)
 
     def create_maze(self):
         """ Chuyển bản đồ từ graph thành ma trận ký tự """
@@ -55,7 +55,7 @@ class Level1:
     def draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.map_img, (MAP_POS_X, MAP_POS_Y))  # Vẽ bản đồ
-        # self.draw_grids()  # Vẽ lưới (nếu muốn)
+        self.draw_grids()  # Vẽ lưới (nếu muốn)
 
         # Vẽ Pac-Man & Ghost
         self.pacman.draw()
@@ -76,15 +76,10 @@ class Level1:
     
 
     def run(self):
-        """ Vòng lặp chạy Level 1 """
+        """ Vòng lặp chạy Level 22 """
         found_pacman = False  # Kiểm tra khi nào ma tìm thấy Pac-Man
 
         while self.running:
-            # self.screen.fill(BLACK)
-            # self.screen.blit(self.map_img, (MAP_POS_X, MAP_POS_Y))
-            # self.draw_grids()
-            # self.pacman.draw()
-            # self.ghost.draw()
             self.draw()
             
             for event in pygame.event.get():
@@ -95,9 +90,7 @@ class Level1:
                         return "back"
 
             if not found_pacman:
-                path, expanded_nodes, memory_usage, search_time = bfs(tuple(self.ghost.grid_pos), tuple(self.pacman.grid_pos), self.maze, track_stats=True)
-                # print(f"Full path: {path}")
-                # print(f"[DEBUG] BFS RETURNED -> Nodes: {self.ghost.expanded_nodes}, Memory: {self.ghost.memory_usage} bytes")
+                path, expanded_nodes, memory_usage, search_time = dfs(tuple(self.ghost.grid_pos), tuple(self.pacman.grid_pos), self.maze, track_stats=True)
                 
                 self.ghost.expanded_nodes = expanded_nodes
                 self.ghost.memory_usage = memory_usage
@@ -115,11 +108,6 @@ class Level1:
                     print(f"Số nút mở rộng: {self.ghost.expanded_nodes}")
                     print(f"Bộ nhớ sử dụng: {self.ghost.memory_usage} bytes")
 
-                    # Chờ 30 giây trước khi đóng
-                    # pygame.time.delay(10000)
-                    # self.running = False
-                #    return "level"
-
             pygame.display.update()
 
         pygame.quit()
@@ -128,5 +116,5 @@ class Level1:
     
 
 if __name__ == "__main__":
-    test = Level1()
+    test = Level2()
     test.run()

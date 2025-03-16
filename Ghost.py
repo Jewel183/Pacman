@@ -4,7 +4,7 @@ import heapq
 import sys
 import time
 
-def get_neighbors(pos, maze):
+def get_neighbors_bfs(pos, maze):
     x, y = pos
     neighbors = [
         (x, y - 1), (x, y + 1),  # Lên, Xuống
@@ -13,21 +13,12 @@ def get_neighbors(pos, maze):
     return [(nx, ny) for nx, ny in neighbors if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze) and maze[ny][nx] != 1]
 
 
-
-# def get_neighbors(pos, maze):
-#     x, y = pos
-#     neighbors = [
-#         (x, y - 1), (x, y + 1),  # Lên và Xuống
-#         (x - 1, y), (x + 1, y)   # Trái và Phải
-#     ]
-#     return [(nx, ny) for nx, ny in neighbors if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze) and maze[ny][nx] != '1']
-
-
 def bfs(start, goal, maze, track_stats=False):
     search_start_time = time.time()
     queue = deque([(start, [start])])  
     visited = {start}
     expanded_nodes = 0
+    # max_memory = sys.getsizeof(queue) + sys.getsizeof(visited)
 
     while queue:
         current, path = queue.popleft()
@@ -35,19 +26,39 @@ def bfs(start, goal, maze, track_stats=False):
 
         if current == goal:
             search_time = time.time() - search_start_time
+            
+            
+            # print(f"[DEBUG] BFS - Expanded Nodes: {expanded_nodes}, Memory: {memory_usage} bytes")
+            
             if track_stats:
                 memory_usage = sys.getsizeof(queue) + sys.getsizeof(visited)
                 return path, expanded_nodes, memory_usage, search_time
             return path  # Trả về đường đi (bỏ ô đầu tiên vì đó là vị trí hiện tại)
 
-        for neighbor in get_neighbors(current, maze):
+        for neighbor in get_neighbors_bfs(current, maze):
             if neighbor not in visited:
                 visited.add(neighbor)
                 queue.append((neighbor, path + [neighbor]))
 
-    # search_time = time.time() - search_start_time 
-    # return ([], expanded_nodes, sys.getsizeof(queue) + sys.getsizeof(visited), search_time) if track_stats else []
-    return [] 
+    # max_memory = max(max_memory, sys.getsizeof(queue) + sys.getsizeof(visited))
+    search_time = time.time() - search_start_time 
+    return ([], expanded_nodes, sys.getsizeof(queue) + sys.getsizeof(visited), search_time) if track_stats else []
+
+
+def get_neighbors_dfs(pos, maze):
+    """ Trả về danh sách ô hợp lệ (trái, phải, trên, dưới, không đi chéo) """
+    x, y = pos
+    neighbors = [
+        (x - 1, y),  # Trái
+        (x + 1, y),  # Phải
+        (x, y - 1),  # Lên
+        (x, y + 1)   # Xuống
+    ]
+    return [
+        (nx, ny) for nx, ny in neighbors 
+        if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze)  # Đảm bảo không ra ngoài bản đồ
+        and maze[ny][nx] != 1  # Kiểm tra không phải tường
+    ]
     
 
 def dfs(start, goal, maze, track_stats=False):
@@ -65,17 +76,22 @@ def dfs(start, goal, maze, track_stats=False):
             search_time = time.time() - search_start_time  
             if track_stats:
                 memory_usage = sys.getsizeof(stack) + sys.getsizeof(visited)  
-                return path[1:], expanded_nodes, memory_usage, search_time
-            # print(f"DFS: Time {search_time:.4f}s, Expand Node {expanded_nodes}, Memory {memory_usage} bytes")
-            return path[1:]  # Trả về đường đi nếu đến Pac-Man
+                return path, expanded_nodes, memory_usage, search_time
+            return path  # Trả về đường đi nếu đến Pac-Man
 
-        for neighbor in get_neighbors(current, maze):
+        neighbors = get_neighbors_dfs(current, maze)
+
+        for neighbor in neighbors:
             if neighbor not in visited:
                 visited.add(neighbor)
                 stack.append((neighbor, path + [neighbor]))
 
     search_time = time.time() - search_start_time
-    return ([], expanded_nodes, sys.getsizeof(stack) + sys.getsizeof(visited), search_time) if track_stats else []
+    if track_stats:
+        memory_usage = sys.getsizeof(stack) + sys.getsizeof(visited)
+        return [], expanded_nodes, memory_usage, search_time
+    # return ([], expanded_nodes, sys.getsizeof(stack) + sys.getsizeof(visited), search_time) if track_stats else []
+    return []
 
 def ucs(graph, start, goal, track_stats=False):
     """Tìm đường bằng Uniform Cost Search"""
@@ -97,9 +113,8 @@ def ucs(graph, start, goal, track_stats=False):
             search_time = time.time() - search_start_time  
             if track_stats:
                 memory_usage = sys.getsizeof(priority_queue) + sys.getsizeof(visited)  
-                return path[1:], expanded_nodes, memory_usage, search_time
-            # print(f"UCS: Time {search_time:.4f}s, Expand Node {expanded_nodes}, Memory {memory_usage} bytes")
-            return path[1:]  # Trả về đường đi thay vì chỉ trả về cost
+                return path, expanded_nodes, memory_usage, search_time
+            return path  # Trả về đường đi thay vì chỉ trả về cost
 
         for neighbor, weight in graph.get(node, []):
             if neighbor not in visited:
@@ -116,7 +131,7 @@ def a_star(graph, start, goal, heuristic, track_stats=False):
     expanded_nodes = 0 
     
     while priority_queue:
-        estimate, cost, node, path = heapq.heappop(priority_queue)
+        _, cost, node, path = heapq.heappop(priority_queue)
         expanded_nodes += 1 
          
         if node in visited:
@@ -127,14 +142,15 @@ def a_star(graph, start, goal, heuristic, track_stats=False):
             search_time = time.time() - search_start_time  
             if track_stats:
                 memory_usage = sys.getsizeof(priority_queue) + sys.getsizeof(visited)  
-                return path[1:], expanded_nodes, memory_usage, search_time
+                return path, expanded_nodes, memory_usage, search_time
             #  print(f"A*: Time {search_time:.4f}s, Expand Node {expanded_nodes}, Memory {memory_usage} bytes")
-            return path[1:]
+            return path
         
         for neighbor, weight in graph.get(node, []):
+            new_cost = cost + weight
             if neighbor not in visited:
-                estimated_cost = cost + weight + heuristic[neighbor]
-                heapq.heappush(priority_queue, (estimated_cost, cost + weight, neighbor, path + [neighbor]))
+                estimated_cost = new_cost + heuristic[neighbor]
+                heapq.heappush(priority_queue, (estimated_cost, new_cost, neighbor, path + [neighbor]))
                 
     search_time = time.time() - search_start_time
     return ([], expanded_nodes, sys.getsizeof(priority_queue) + sys.getsizeof(visited), search_time) if track_stats else []
@@ -218,14 +234,14 @@ class Ghost:
     
     def move(self, new_grid_pos, maze):
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_move_time < 100:
+        if current_time - self.last_move_time < 150:
             return
         self.last_move_time = current_time
         
         if (
             new_grid_pos[1] < 0 or new_grid_pos[1] >= len(maze) 
             or new_grid_pos[0] < 0 or new_grid_pos[0] >= len(maze[0]) 
-            or maze[new_grid_pos[1]][new_grid_pos[0]] == "1"
+            or maze[new_grid_pos[1]][new_grid_pos[0]] == 1
         ):
             return
             
@@ -245,32 +261,13 @@ class Ghost:
         print(f"Ghost moving to: {next_x}, {next_y}")  # Debug
         
         if maze[next_y][next_x] == 1:
-            print(f"Ghost blocked by wall at {next_x}, {next_y}")
+            # print(f"Ghost blocked by wall at {next_x}, {next_y}")
             return  
 
         self.update_direction((next_x, next_y))
         self.move([next_x, next_y], maze)
 
-        # if 0 <= next_x < len(maze[0]) and 0 <= next_y < len(maze) and maze[next_y][next_x] != "1":
-        #     self.update_direction((next_x, next_y))
-        #     self.move([next_x, next_y], maze)
-        #     # self.grid_pos = [next_x, next_y]
         pygame.display.update()
-
-    
-    # def move_toward(self, path, maze):
-    #     if path is None or len(path) < 2:
-    #         return
-        
-    #     if not isinstance(path[1], tuple) or len(path[1]) != 2:
-    #         return
-        
-    #     next_x, next_y = path[1]
-    #     if not (0 <= next_y < len(maze) and 0 <= next_x < len(maze[0])) and maze[next_y][next_x] == "#":
-    #         return
-        
-    #     self.update_direction((next_x, next_y))
-    #     self.move([next_x, next_y], maze)
             
     
     def check_catch_pacman(self, pacman):
@@ -289,13 +286,11 @@ class Blue(Ghost): # BFS
         self.search_time = 0
         
     def move_blue(self, pacman_pos, maze):
-        path, expanded_nodes, memory_usage, search_time = bfs(tuple(self.grid_pos), tuple(pacman_pos), maze, True)
-        
+        path, expanded_nodes, memory_usage, search_time = bfs(tuple(self.grid_pos), tuple(pacman_pos), maze, track_stats=True)
         self.expanded_nodes = expanded_nodes
         self.memory_usage = memory_usage
         self.search_time = search_time
         
-        print(f"Blue Ghost (BFS) - Time: {search_time:.4f}s, Expand Node: {expanded_nodes}, Memory: {memory_usage} bytes")
         self.move_toward(path, maze)
         
         

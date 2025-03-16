@@ -5,11 +5,11 @@ from Pacman import *  # Import Pac-Man
 from Ghost import *  # Import thuật toán BFS
 from Map import *  # Import hàm đọc bản đồ
 
-class Level1:
+class Level3:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
-        pygame.display.set_caption("Level 1: Blue Ghost tìm Pac-Man (BFS)")
+        pygame.display.set_caption("Level 3: Orange Ghost tìm Pac-Man (UCS)")
         self.font = pygame.font.SysFont("arial", 20)
         self.running = True
         self.map_img = pygame.image.load(MAP_IMG)
@@ -17,7 +17,7 @@ class Level1:
         self.graph, self.pacman_pos, _ = read_map(MAP_INPUT_TXT)
         self.maze = self.create_maze() 
         self.pacman = Pacman(self, self.pacman_pos)
-        self.ghost = Blue(self, (21, 14))
+        self.ghost = Orange(self, (21, 14))
         self.start_time = time.time()
         self.back_button = pygame.Rect(0, 0, 80, 40)
 
@@ -76,7 +76,7 @@ class Level1:
     
 
     def run(self):
-        """ Vòng lặp chạy Level 1 """
+        """ Vòng lặp chạy Level 3 """
         found_pacman = False  # Kiểm tra khi nào ma tìm thấy Pac-Man
 
         while self.running:
@@ -95,9 +95,29 @@ class Level1:
                         return "back"
 
             if not found_pacman:
-                path, expanded_nodes, memory_usage, search_time = bfs(tuple(self.ghost.grid_pos), tuple(self.pacman.grid_pos), self.maze, track_stats=True)
-                # print(f"Full path: {path}")
-                # print(f"[DEBUG] BFS RETURNED -> Nodes: {self.ghost.expanded_nodes}, Memory: {self.ghost.memory_usage} bytes")
+                # Tạo đồ thị từ mê cung
+                graph = {}
+                for y in range(len(self.maze)):
+                    for x in range(len(self.maze[0])):
+                        if self.maze[y][x] != 1:  # Nếu không phải tường
+                            pos = (x, y)
+                            graph[pos] = []
+                            # Thêm các hàng xóm hợp lệ
+                            for nx, ny in [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]:
+                                if 0 <= nx < len(self.maze[0]) and 0 <= ny < len(self.maze) and self.maze[ny][nx] != 1:
+                                    # Thêm trọng số (weight) - có thể đặt là 1 nếu chi phí đồng nhất
+                                    graph[pos].append(((nx, ny), 1))
+
+                # Gọi UCS
+                path, expanded_nodes, memory_usage, search_time = ucs(
+                    graph, 
+                    tuple(self.ghost.grid_pos), 
+                    tuple(self.pacman.grid_pos), 
+                    track_stats=True
+                )
+                
+                # path, expanded_nodes, memory_usage, search_time = bfs(tuple(self.ghost.grid_pos), tuple(self.pacman.grid_pos), self.maze, track_stats=True)
+                
                 
                 self.ghost.expanded_nodes = expanded_nodes
                 self.ghost.memory_usage = memory_usage
@@ -128,5 +148,5 @@ class Level1:
     
 
 if __name__ == "__main__":
-    test = Level1()
+    test = Level3()
     test.run()

@@ -3,6 +3,10 @@ from config import *
 from MainMenu import MainMenu
 from Level import Level
 from About import About
+from lv1 import *
+from lv2 import *
+from lv3 import *
+from lv4 import *
 
 def main():
     pygame.init()
@@ -46,16 +50,33 @@ def main():
             
             elif game_state == "level":
                 result = level_screen.handle_event(event)
-                if result:  
-                    print(f"Chọn {result} để bắt đầu game!")  # Sau này sẽ xử lý vào game
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
-                    game_state = "menu"  # Trở về menu chính
+                # if result:  
+                #     print(f"Chọn {result} để bắt đầu game!")  # Sau này sẽ xử lý vào game
+                if result == "Level 1":
+                    level1 = Level1()
+                    level1.run()
+                    if result == "back":
+                        game_state = "level"
+                elif result == "Level 2":
+                    level2 = Level2()
+                    level2.run()
+                    if result == "back":
+                        game_state = "level"
+                elif result == "Level 3":
+                    level3 = Level3()
+                    level3.run()
+                    if result == "back":
+                        game_state = "level"
+                elif result == "Level 4":
+                    level4 = Level4()
+                    level4.run()
+                    if result == "back":
+                        game_state = "level"
+                elif result == "back":
+                    game_state = "menu"
+                # elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+                #     game_state = "menu"  # Trở về menu chính
                 
-            if game_state == "level":
-                result = level_screen.handle_event(event)
-                if result == "back":
-                    game_state = "menu"    
-            
             elif game_state == "about":
                 result = about_screen.handle_event(event)
                 if result == "back":

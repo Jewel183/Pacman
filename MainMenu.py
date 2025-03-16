@@ -6,9 +6,9 @@ class MainMenu:
         self.font = pygame.font.SysFont("arial", 30)
         
         self.buttons = {
-            "Start": pygame.Rect(280, 405, 300, 50),
-            "About": pygame.Rect(280, 485, 300, 50),
-            "Exit": pygame.Rect(280, 565, 300, 50)
+            "Start": pygame.Rect(150, 405, 300, 50),
+            "About": pygame.Rect(150, 485, 300, 50),
+            "Exit": pygame.Rect(150, 565, 300, 50)
         } 
         
         self.bg = pygame.image.load(HOME_BACKGROUND)

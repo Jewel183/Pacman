@@ -4,26 +4,29 @@ class Level:
     def __init__(self, screen):
         self.screen = screen
         self.font = pygame.font.SysFont("arial", 30)
+        self.title_font = pygame.font.SysFont("arial", 40, bold=True)
         
         self.buttons = {
-            "Level 1": pygame.Rect(280, 110, 300, 50),
-            "Level 2": pygame.Rect(280, 195, 300, 50),
-            "Level 3": pygame.Rect(280, 280, 300, 50),
-            "Level 4": pygame.Rect(280, 365, 300, 50),
-            "Level 5": pygame.Rect(280, 450, 300, 50),
-            "Level 6": pygame.Rect(280, 535, 300, 50)
+            "Level 1": pygame.Rect(150, 105, 300, 50),
+            "Level 2": pygame.Rect(150, 190, 300, 50),
+            "Level 3": pygame.Rect(150, 275, 300, 50),
+            "Level 4": pygame.Rect(150, 360, 300, 50),
+            "Level 5": pygame.Rect(150, 445, 300, 50),
+            "Level 6": pygame.Rect(150, 530, 300, 50)
         } 
         
-        self.back_button = pygame.Rect(100, 580, 150, 50)
+        self.back_button = pygame.Rect(50, 600, 100, 50)
         
         self.bg = pygame.image.load(LEVEL_BACKGROUND)
         self.bg = pygame.transform.scale(self.bg, (APP_WIDTH, APP_HEIGHT))
         
     
     def draw(self):
+        title_text = self.title_font.render("Choose the level you want", True, WHITE)
+        self.screen.blit(title_text, (APP_WIDTH // 2 - title_text.get_width() // 2, 120))
+        
         """ Vẽ button với hiệu ứng hover và click """
         self.screen.blit(self.bg, (0, 0))
-        
         mouse_pos = pygame.mouse.get_pos()
         
         for text, rect in self.buttons.items():
