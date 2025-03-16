@@ -17,7 +17,7 @@ class Level1:
         self.graph, self.pacman_pos, _ = read_map(MAP_INPUT_TXT)
         self.maze = self.create_maze() 
         self.pacman = Pacman(self, self.pacman_pos)
-        self.ghost = Blue(self, (21, 14))
+        self.ghost = Blue(self, (26, 29))
         self.start_time = time.time()
         self.back_button = pygame.Rect(0, 0, 80, 40)
 

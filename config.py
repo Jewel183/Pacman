@@ -30,7 +30,7 @@ ROW, COL = MAP_WIDTH // CELL_SIZE, MAP_HEIGHT // CELL_SIZE
 SPEED = 250
 
 
-# FONT 
+FONT = r"E:\\2024-2025\\HK2_2024-2025\\AI\\Project01\\Project-Search-Pacman\\Font\\Pixelfy.ttf"
 
 # Color
 BACKGROUND_COLOR =(65, 98, 132)

@@ -3,7 +3,7 @@ from config import *
 class MainMenu:
     def __init__(self, screen):
         self.screen = screen
-        self.font = pygame.font.SysFont("arial", 30)
+        self.font = pygame.font.SysFont(FONT, 30)
         
         self.buttons = {
             "Start": pygame.Rect(150, 405, 300, 50),

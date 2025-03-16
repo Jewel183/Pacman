@@ -17,9 +17,9 @@ class Level2:
         self.graph, self.pacman_pos, _ = read_map(MAP_INPUT_TXT)
         self.maze = self.create_maze() 
         self.pacman = Pacman(self, self.pacman_pos)
-        self.ghost = Pink(self, (21, 14))
+        self.ghost = Pink(self, (12, 5))
         self.start_time = time.time()
-        self.back_button = pygame.Rect(50, 600, 100, 50)
+        self.back_button = pygame.Rect(0, 0, 80, 40)
 
     def create_maze(self):
         """ Chuyển bản đồ từ graph thành ma trận ký tự """
@@ -76,7 +76,7 @@ class Level2:
     
 
     def run(self):
-        """ Vòng lặp chạy Level 22 """
+        """ Vòng lặp chạy Level 2 """
         found_pacman = False  # Kiểm tra khi nào ma tìm thấy Pac-Man
 
         while self.running:
@@ -99,7 +99,7 @@ class Level2:
                 if path:
                     self.ghost.move_toward(path, self.maze)
                 
-                # Kiểm tra nếu ma xanh bắt được Pac-Man
+                
                 if tuple(self.ghost.grid_pos) == tuple(self.pacman.grid_pos):
                     found_pacman = True
                     time_to_catch = time.time() - self.start_time

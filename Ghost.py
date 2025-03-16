@@ -54,11 +54,19 @@ def get_neighbors_dfs(pos, maze):
         (x, y - 1),  # Lên
         (x, y + 1)   # Xuống
     ]
-    return [
-        (nx, ny) for nx, ny in neighbors 
-        if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze)  # Đảm bảo không ra ngoài bản đồ
-        and maze[ny][nx] != 1  # Kiểm tra không phải tường
-    ]
+    valid_neighbors = []
+    
+    for nx, ny in neighbors:
+        if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze) and maze[ny][nx] != 1:
+            valid_neighbors.append((nx, ny))
+            
+    return valid_neighbors
+    
+    # return [
+    #     (nx, ny) for nx, ny in neighbors 
+    #     if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze)  # Đảm bảo không ra ngoài bản đồ
+    #     and maze[ny][nx] != 1  # Kiểm tra không phải tường
+    # ]
     
 
 def dfs(start, goal, maze, track_stats=False):
@@ -80,6 +88,7 @@ def dfs(start, goal, maze, track_stats=False):
             return path  # Trả về đường đi nếu đến Pac-Man
 
         neighbors = get_neighbors_dfs(current, maze)
+        neighbors.reverse()
 
         for neighbor in neighbors:
             if neighbor not in visited:
@@ -90,7 +99,6 @@ def dfs(start, goal, maze, track_stats=False):
     if track_stats:
         memory_usage = sys.getsizeof(stack) + sys.getsizeof(visited)
         return [], expanded_nodes, memory_usage, search_time
-    # return ([], expanded_nodes, sys.getsizeof(stack) + sys.getsizeof(visited), search_time) if track_stats else []
     return []
 
 def ucs(graph, start, goal, track_stats=False):
@@ -258,7 +266,7 @@ class Ghost:
             return
         
         next_x, next_y = path[1]
-        print(f"Ghost moving to: {next_x}, {next_y}")  # Debug
+        # print(f"Ghost moving to: {next_x}, {next_y}")  # Debug
         
         if maze[next_y][next_x] == 1:
             # print(f"Ghost blocked by wall at {next_x}, {next_y}")

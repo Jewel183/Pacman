@@ -80,11 +80,6 @@ class Level3:
         found_pacman = False  # Kiểm tra khi nào ma tìm thấy Pac-Man
 
         while self.running:
-            # self.screen.fill(BLACK)
-            # self.screen.blit(self.map_img, (MAP_POS_X, MAP_POS_Y))
-            # self.draw_grids()
-            # self.pacman.draw()
-            # self.ghost.draw()
             self.draw()
             
             for event in pygame.event.get():
@@ -116,9 +111,6 @@ class Level3:
                     track_stats=True
                 )
                 
-                # path, expanded_nodes, memory_usage, search_time = bfs(tuple(self.ghost.grid_pos), tuple(self.pacman.grid_pos), self.maze, track_stats=True)
-                
-                
                 self.ghost.expanded_nodes = expanded_nodes
                 self.ghost.memory_usage = memory_usage
                 self.ghost.search_time = search_time
@@ -135,10 +127,6 @@ class Level3:
                     print(f"Số nút mở rộng: {self.ghost.expanded_nodes}")
                     print(f"Bộ nhớ sử dụng: {self.ghost.memory_usage} bytes")
 
-                    # Chờ 30 giây trước khi đóng
-                    # pygame.time.delay(10000)
-                    # self.running = False
-                #    return "level"
 
             pygame.display.update()
 

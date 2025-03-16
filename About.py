@@ -3,8 +3,8 @@ from config import *
 class About:
     def __init__(self, screen):
         self.screen = screen
-        self.font = pygame.font.SysFont("arial", 25)
-        self.title_font = pygame.font.SysFont("arial", 40, bold=True)
+        self.font = pygame.font.SysFont("timesnewroman", 25)
+        self.title_font = pygame.font.SysFont(FONT, 60)
         
         self.back_button = pygame.Rect(100, 580, 150, 50)
         self.bg = pygame.image.load(ABOUT_BACKGROUND)
@@ -13,11 +13,12 @@ class About:
 
         # Nội dung About
         self.about_text = [
-            "Pac-Man AI Project",
-            "Developed by: Your Team Name",
-            "Using Python & Pygame",
-            "AI Algorithms: BFS, DFS, A*, UCS",
-            "Enjoy the game!"
+            "Project 1. Search",
+            "Developed by: ",
+            "23127094 - Hoàng Nhân",
+            "23127134 - Phan Phú Trọng",
+            "23127200 - Nguyễn Minh Kha",
+            "23127246 - Nguyễn Trần Thiên Phú"
         ]
         
         self.box_width, self.box_height = 500, 300  # Kích thước bảng
@@ -33,18 +34,26 @@ class About:
         self.screen.blit(box_surface, self.box_pos)
 
         # Hiển thị tiêu đề
-        title_text = self.title_font.render("About the Game", True, WHITE)
+        title_text = self.title_font.render("Information", True, WHITE)
         self.screen.blit(title_text, (APP_WIDTH // 2 - title_text.get_width() // 2, 120))
 
         # Hiển thị nội dung
         for i, line in enumerate(self.about_text):
             text_surface = self.font.render(line, True, WHITE)
-            text_x = self.box_pos[0] + self.box_width // 2 - text_surface.get_width() // 2
+            if i == 0:
+                text_x = self.box_pos[0] + self.box_width // 2 - text_surface.get_width() // 2
+            else:
+                text_x = self.box_pos[0] + 50
             text_y = self.box_pos[1] + 30 + i * 40  # Cách lề trên của bảng 30px
             self.screen.blit(text_surface, (text_x, text_y))
             
         # Hiệu ứng hover cho nút Back
-        button_color = LIGHT_GREY if self.is_hovering else DARK_GREY
+        # button_color = LIGHT_GREY if self.is_hovering else DARK_GREY
+        mouse_pos = pygame.mouse.get_pos()
+        if self.back_button.collidepoint(mouse_pos):
+            button_color = LIGHT_GREY  
+        else:
+            button_color = DARK_GREY
         pygame.draw.rect(self.screen, button_color, self.back_button, border_radius=10)
 
         text_surf = self.font.render("BACK", True, WHITE)
@@ -64,33 +73,33 @@ class About:
         return None
 
 
-# def main():
-#     pygame.init()
+def main():
+    pygame.init()
 
-#     # Tạo cửa sổ game
-#     screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
-#     pygame.display.set_caption("Test ABOUT SCREEN")
+    # Tạo cửa sổ game
+    screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
+    pygame.display.set_caption("Test ABOUT SCREEN")
 
-#     # Tạo đối tượng màn hình About
-#     about_screen = About(screen)
+    # Tạo đối tượng màn hình About
+    about_screen = About(screen)
 
-#     running = True
-#     while running:
-#         screen.fill(BLACK)  # Xóa màn hình
-#         about_screen.draw()  # Vẽ màn hình About
+    running = True
+    while running:
+        screen.fill(BLACK)  # Xóa màn hình
+        about_screen.draw()  # Vẽ màn hình About
         
-#         # Xử lý sự kiện
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 running = False
-#             elif event.type == pygame.MOUSEBUTTONDOWN:
-#                 if about_screen.handle_event(event) == "back":
-#                     print("Back button clicked! Quitting test...")
-#                     running = False
+        # Xử lý sự kiện
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if about_screen.handle_event(event) == "back":
+                    print("Back button clicked! Quitting test...")
+                    running = False
 
-#         pygame.display.update()
+        pygame.display.update()
 
-#     pygame.quit()
+    pygame.quit()
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()

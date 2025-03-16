@@ -15,11 +15,11 @@ class GridTest:
         self.map_img = pygame.image.load(MAP_IMG)  # Đường dẫn tới file ảnh
         self.map_img = pygame.transform.scale(self.map_img, (MAP_WIDTH, MAP_HEIGHT))  # Resize cho đúng kích thước
 
-        # Tạo Pac-Man ở vị trí (5, 5)
-        self.pacman = Pacman(self, (5, 5))
+        # Tạo Pac-Man ở vị trí (5, 5) 
+        self.pacman = Pacman(self, (1, 20))
 
         # Tạo ma xanh (Blue Ghost) ở vị trí (10, 10)
-        self.ghost = Blue(self, (10, 11))
+        self.ghost = Blue(self, (21, 20))
 
     def draw_grids(self):
         """ Vẽ lưới lên màn hình """
