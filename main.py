@@ -7,25 +7,22 @@ from lv1 import *
 from lv2 import *
 from lv3 import *
 from lv4 import *
+from lv5 import *
 
 def main():
     pygame.init()
-
-    # Tạo cửa sổ game
     screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
     pygame.display.set_caption("Pac-Man AI Project")
 
-    # Khởi tạo các màn hình
     main_menu = MainMenu(screen)
     level_screen = Level(screen)
     about_screen = About(screen)
 
-    # Trạng thái game (bắt đầu từ menu chính)
     game_state = "menu"
 
     running = True
     while running:
-        screen.fill(BLACK)  # Xóa màn hình
+        screen.fill(BLACK)  
         
         if game_state == "menu":
             main_menu.draw()
@@ -34,7 +31,6 @@ def main():
         elif game_state == "about":
             about_screen.draw()
 
-        # Xử lý sự kiện
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -50,8 +46,6 @@ def main():
             
             elif game_state == "level":
                 result = level_screen.handle_event(event)
-                # if result:  
-                #     print(f"Chọn {result} để bắt đầu game!")  # Sau này sẽ xử lý vào game
                 if result == "Level 1":
                     level1 = Level1()
                     level1.run()
@@ -72,6 +66,11 @@ def main():
                     level4.run()
                     if result == "back":
                         game_state = "level"
+                elif result == "Level 5":
+                    level5 = Level5()
+                    level5.run()
+                    if result == "back":
+                        game_state = "level"
                 elif result == "back":
                     game_state = "menu"
                 # elif event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
@@ -80,7 +79,7 @@ def main():
             elif game_state == "about":
                 result = about_screen.handle_event(event)
                 if result == "back":
-                    game_state = "menu"  # Trở về menu chính
+                    game_state = "menu"  
 
         pygame.display.update()
 

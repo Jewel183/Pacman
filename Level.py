@@ -3,8 +3,8 @@ from config import *
 class Level:
     def __init__(self, screen):
         self.screen = screen
-        self.font = pygame.font.SysFont("arial", 30)
-        self.title_font = pygame.font.SysFont("arial", 40, bold=True)
+        self.font = pygame.font.SysFont(FONT, 30)
+        self.title_font = pygame.font.SysFont(FONT, 40, bold=True)
         
         self.buttons = {
             "Level 1": pygame.Rect(150, 105, 300, 50),
@@ -25,12 +25,10 @@ class Level:
         title_text = self.title_font.render("Choose the level you want", True, WHITE)
         self.screen.blit(title_text, (APP_WIDTH // 2 - title_text.get_width() // 2, 120))
         
-        """ Vẽ button với hiệu ứng hover và click """
         self.screen.blit(self.bg, (0, 0))
         mouse_pos = pygame.mouse.get_pos()
         
         for text, rect in self.buttons.items():
-            # Hiệu ứng hover khi di chuột vào
             if rect.collidepoint(mouse_pos):
                 button_color = LIGHT_GREY
             else:
@@ -52,7 +50,6 @@ class Level:
         
         
     def handle_event(self, event):
-        # Xử lí click chuột
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             
@@ -63,35 +60,7 @@ class Level:
                 if rect.collidepoint(mouse_pos):
                     pygame.draw.rect(self.screen, WHITE, rect, border_radius=10)
                     pygame.display.update()
-                    pygame.time.delay(100) # Giữ hiệu ứng trong ms
-                    return text  # Trả về tên của nút được nhấn
+                    pygame.time.delay(100) 
+                    return text  
         return None
     
-
-# if __name__ == "__main__":
-#     pygame.init()
-
-#     # Tạo cửa sổ game
-#     screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
-#     pygame.display.set_caption("Test LEVEL")
-
-#     # Tạo đối tượng menu
-#     level = Level(screen)
-
-#     running = True
-#     while running:
-#         screen.fill(BLACK)  # Xóa màn hình
-#         level.draw()  # Vẽ menu
-        
-#         # Xử lý sự kiện
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 running = False
-#             elif event.type == pygame.MOUSEBUTTONDOWN:
-#                 clicked_button = level.handle_event(event)
-#                 if clicked_button:
-#                     print(f"Nút '{clicked_button}' được nhấn!")  # In ra tên nút khi bấm
-
-#         pygame.display.update()
-
-#     pygame.quit()

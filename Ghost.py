@@ -18,7 +18,6 @@ def bfs(start, goal, maze, track_stats=False):
     queue = deque([(start, [start])])  
     visited = {start}
     expanded_nodes = 0
-    # max_memory = sys.getsizeof(queue) + sys.getsizeof(visited)
 
     while queue:
         current, path = queue.popleft()
@@ -27,8 +26,6 @@ def bfs(start, goal, maze, track_stats=False):
         if current == goal:
             search_time = time.time() - search_start_time
             
-            
-            # print(f"[DEBUG] BFS - Expanded Nodes: {expanded_nodes}, Memory: {memory_usage} bytes")
             
             if track_stats:
                 memory_usage = sys.getsizeof(queue) + sys.getsizeof(visited)
@@ -40,7 +37,6 @@ def bfs(start, goal, maze, track_stats=False):
                 visited.add(neighbor)
                 queue.append((neighbor, path + [neighbor]))
 
-    # max_memory = max(max_memory, sys.getsizeof(queue) + sys.getsizeof(visited))
     search_time = time.time() - search_start_time 
     return ([], expanded_nodes, sys.getsizeof(queue) + sys.getsizeof(visited), search_time) if track_stats else []
 
@@ -61,12 +57,6 @@ def get_neighbors_dfs(pos, maze):
             valid_neighbors.append((nx, ny))
             
     return valid_neighbors
-    
-    # return [
-    #     (nx, ny) for nx, ny in neighbors 
-    #     if 0 <= nx < len(maze[0]) and 0 <= ny < len(maze)  # Đảm bảo không ra ngoài bản đồ
-    #     and maze[ny][nx] != 1  # Kiểm tra không phải tường
-    # ]
     
 
 def dfs(start, goal, maze, track_stats=False):
@@ -151,7 +141,6 @@ def a_star(graph, start, goal, heuristic, track_stats=False):
             if track_stats:
                 memory_usage = sys.getsizeof(priority_queue) + sys.getsizeof(visited)  
                 return path, expanded_nodes, memory_usage, search_time
-            #  print(f"A*: Time {search_time:.4f}s, Expand Node {expanded_nodes}, Memory {memory_usage} bytes")
             return path
         
         for neighbor, weight in graph.get(node, []):
@@ -174,7 +163,6 @@ class Ghost:
         self.width = CELL_SIZE - 2
         self.grid_pos = [pos[0], pos[1]]
         self.pixel_pos = self.get_current_pixel_pos()
-        # self.pixel_pos = [self.grid_pos[0] * CELL_SIZE, self.grid_pos[1] * CELL_SIZE]
         self.direction = 'up'
         self.ghost_type = ghost_type                    # Loai ma (red, blue, pink, orange)
         self.speed = CELL_SIZE // 6
@@ -188,21 +176,16 @@ class Ghost:
     def draw(self):
         if not self.app or not hasattr(self.app, "screen"):
             return
-        # self.app.screen.fill(BLACK, (self.pixel_pos[0], self.pixel_pos[1], self.width, self.width))
         
         pygame.draw.rect(self.app.screen, BLACK, (self.pixel_pos[0], self.pixel_pos[1], self.width, self.width))
-        # if 0 <= self.pixel_pos[0] < APP_WIDTH and 0 <= self.pixel_pos[1] < APP_HEIGHT:
         self.app.screen.blit(self.ghost_image, (self.pixel_pos[0], self.pixel_pos[1]))
         pygame.display.update((self.pixel_pos[0], self.pixel_pos[1], self.width, self.width))
             
             
     def get_current_pixel_pos(self):
-        # return [self.grid_pos[0] * CELL_SIZE + CELL_SIZE // 2 - self.width // 2 + MAP_POS_X,
-        #         self.grid_pos[1] * CELL_SIZE + CELL_SIZE // 2 - self.width // 2 + MAP_POS_Y]
-        #  return [self.grid_pos[0] * CELL_SIZE, self.grid_pos[1] * CELL_SIZE]
         
         half_cell = CELL_SIZE // 2
-        offset = half_cell - self.width // 2  # Để ghost nằm giữa ô
+        offset = half_cell - self.width // 2  
         
         return [
             self.grid_pos[0] * CELL_SIZE + offset + MAP_POS_X,
@@ -234,7 +217,7 @@ class Ghost:
         ):
             return  
         self.update_direction(new_grid_pos)
-        self.app.screen.fill((0, 0, 0), (self.pixel_pos[0], self.pixel_pos[1], self.width, self.width)) # Xóa ma cũ
+        self.app.screen.fill((0, 0, 0), (self.pixel_pos[0], self.pixel_pos[1], self.width, self.width)) 
         self.grid_pos = new_grid_pos
         self.pixel_pos = self.get_current_pixel_pos()    
         self.draw()
@@ -256,9 +239,6 @@ class Ghost:
         self.update(new_grid_pos, maze)
         self.draw()
     
-    # def appear(self):
-    #     self.draw()
-    
     
     def move_toward(self, path, maze):
         if not path or len(path) < 2:
@@ -266,10 +246,8 @@ class Ghost:
             return
         
         next_x, next_y = path[1]
-        # print(f"Ghost moving to: {next_x}, {next_y}")  # Debug
         
         if maze[next_y][next_x] == 1:
-            # print(f"Ghost blocked by wall at {next_x}, {next_y}")
             return  
 
         self.update_direction((next_x, next_y))
@@ -315,8 +293,6 @@ class Pink(Ghost): # DFS
         self.expanded_nodes = expanded_nodes
         self.memory_usage = memory_usage
         self.search_time = search_time
-
-        print(f"Pink Ghost (DFS) - Time: {search_time:.4f}s, Expand Node: {expanded_nodes}, Memory: {memory_usage} bytes")
         
         self.move_toward(path, maze)
         
@@ -334,8 +310,6 @@ class Orange(Ghost): # UCS
         self.expanded_nodes = expanded_nodes
         self.memory_usage = memory_usage
         self.search_time = search_time
-
-        print(f"Orange Ghost (UCS) - Time: {search_time:.4f}s, Expand Node: {expanded_nodes}, Memory: {memory_usage} bytes")
         
         self.move_toward(path, maze)
         
@@ -354,57 +328,7 @@ class Red(Ghost): # A*
         self.memory_usage = memory_usage
         self.search_time = search_time
 
-        print(f"Red Ghost (A*) - Time: {search_time:.4f}s, Expand Node: {expanded_nodes}, Memory: {memory_usage} bytes")
         
         self.move_toward(path, maze)
         
-        
-# class App:
-#     def __init__(self):
-#         self.screen = pygame.display.set_mode((800, 680))
-
-# if __name__ == "__main__":
-#     pygame.init()
-#     screen = pygame.display.set_mode((610, 680))  # Khởi tạo cửa sổ game
-#     pygame.display.set_caption("Test Ghost")
-
-#     app = App()
-#     clock = pygame.time.Clock()
-#     running = True
-
-#     # Tạo một con ma màu đỏ để test
-#     red_ghost = Red(app=app, pos=(10, 10))  # Đặt tạm app=None, chỉ test hiển thị
-#     blue_ghost = Blue(app=app, pos=(12, 10))
-#     pink_ghost = Pink(app=app, pos=(14, 10))
-#     orange_ghost = Orange(app=app, pos=(16, 10))
     
-#     maze = [
-#         "####################",
-#         "#..................#",
-#         "#..................#",
-#         "#..................#",
-#         "####################",
-#     ]
-
-#     while running:
-#         app.screen.fill((0, 0, 0))  # Xóa màn hình mỗi frame
-        
-#         red_ghost.draw()  # Vẽ ma lên màn hình
-#         blue_ghost.draw()
-#         pink_ghost.draw()
-#         orange_ghost.draw()
-        
-#         red_ghost.move([red_ghost.grid_pos[0] + 1, red_ghost.grid_pos[1]], maze)
-#         blue_ghost.move([blue_ghost.grid_pos[0] - 1, blue_ghost.grid_pos[1]], maze)
-#         pink_ghost.move([pink_ghost.grid_pos[0], pink_ghost.grid_pos[1] + 1], maze)
-#         orange_ghost.move([orange_ghost.grid_pos[0], orange_ghost.grid_pos[1] - 1], maze)
-        
-#         # pygame.display.update()
-#         pygame.display.flip()
-#         clock.tick(10)  # Giới hạn FPS về 30
-
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 running = False
-
-#     pygame.quit()

@@ -1,16 +1,16 @@
 import pygame
 import time
-from config import *  # Import các giá trị như APP_WIDTH, APP_HEIGHT, CELL_SIZE
-from Pacman import *  # Import Pac-Man
-from Ghost import *  # Import thuật toán BFS
-from Map import *  # Import hàm đọc bản đồ
+from config import *  
+from Pacman import *  
+from Ghost import *  
+from Map import *  
 
 class Level2:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((APP_WIDTH, APP_HEIGHT))
         pygame.display.set_caption("Level 2: Pink Ghost tìm Pac-Man (DDFS)")
-        self.font = pygame.font.SysFont("arial", 20)
+        self.font = pygame.font.SysFont(FONT, 20)
         self.running = True
         self.map_img = pygame.image.load(MAP_IMG)
         self.map_img = pygame.transform.scale(self.map_img, (MAP_WIDTH, MAP_HEIGHT))
@@ -19,19 +19,18 @@ class Level2:
         self.pacman = Pacman(self, self.pacman_pos)
         self.ghost = Pink(self, (12, 5))
         self.start_time = time.time()
-        self.back_button = pygame.Rect(0, 0, 80, 40)
+        self.back_button = pygame.Rect(265, 0, 80, 40)
 
     def create_maze(self):
         """ Chuyển bản đồ từ graph thành ma trận ký tự """
         max_x = max([x for x, y in self.graph.keys()])
         max_y = max([y for x, y in self.graph.keys()])
         
-        # Điều chỉnh kích thước `maze` theo thực tế bản đồ
         maze = [[1 for _ in range(max_x + 1)] for _ in range(max_y + 1)]
         
         for (x, y) in self.graph.keys():
-            if 0 <= y < len(maze) and 0 <= x < len(maze[0]):  # Kiểm tra hợp lệ
-                maze[y][x] = ' '  # Đường đi
+            if 0 <= y < len(maze) and 0 <= x < len(maze[0]):  
+                maze[y][x] = ' '  
         return maze
 
 
@@ -54,21 +53,19 @@ class Level2:
     
     def draw(self):
         self.screen.fill(BLACK)
-        self.screen.blit(self.map_img, (MAP_POS_X, MAP_POS_Y))  # Vẽ bản đồ
-        self.draw_grids()  # Vẽ lưới (nếu muốn)
+        self.screen.blit(self.map_img, (MAP_POS_X, MAP_POS_Y))  
+        # self.draw_grids()  
 
-        # Vẽ Pac-Man & Ghost
         self.pacman.draw()
         self.ghost.draw()
 
-        # Vẽ nút BACK
         mouse_pos = pygame.mouse.get_pos()
         if self.back_button.collidepoint(mouse_pos):
-            button_color = LIGHT_GREY  
+            button_color = TOMATO
         else:
-            button_color = DARK_GREY
+            button_color = WHITE
         pygame.draw.rect(self.screen, button_color, self.back_button, border_radius=10)
-        text_surf = pygame.font.SysFont("arial", 30).render("Back", True, WHITE)
+        text_surf = pygame.font.SysFont("arial", 30).render("Back", True, BLACK)
         text_rect = text_surf.get_rect(center=self.back_button.center)
         self.screen.blit(text_surf, text_rect)
 
@@ -77,7 +74,7 @@ class Level2:
 
     def run(self):
         """ Vòng lặp chạy Level 2 """
-        found_pacman = False  # Kiểm tra khi nào ma tìm thấy Pac-Man
+        found_pacman = False  
 
         while self.running:
             self.draw()
@@ -112,8 +109,6 @@ class Level2:
 
         pygame.quit()
         
-        
-    
 
 if __name__ == "__main__":
     test = Level2()
